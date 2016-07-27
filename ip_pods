@@ -1,20 +1,20 @@
 #!/bin/bash
-
+KC_CMD=kubectl
 PODIP_TPL={{.status.podIP}}
 
 #get all pods' name
 function get_all_pods() {
     if [ -z "$1" ]; then
-        pod_names=$(kubectl get pods|awk '(NR>1) {print $1}')
+        pod_names=$($KC_CMD get pods|awk '(NR>1) {print $1}')
     else
-        pod_names=$(kubectl get pods|awk "(NR>1 && /$1/) {print \$1}")
+        pod_names=$($KC_CMD get pods|awk "(NR>1 && /$1/) {print \$1}")
     fi
     echo $pod_names
 }
 
 #get ip of pod
 function get_ip() {
-    CMD="kubectl get pod $1 -o go-template=$PODIP_TPL"
+    CMD="$KC_CMD get pod $1 -o go-template=$PODIP_TPL"
     echo `$CMD`
 }
 
